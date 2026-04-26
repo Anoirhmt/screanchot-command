@@ -1133,22 +1133,30 @@ function buildReview() {
         </div>
         ${note ? `<div class="review-item full"><label>Note</label><p>${note}</p></div>` : ''}
         <div class="review-item full">
-            <label>Référence & Code</label>
+            <label>Référence</label>
             <p>ELARAIN JEWELRY</p>
-            <div class="code-badge">${codeEnvoi}</div>
         </div>
     `;
 }
 
-// ── Navigation buttons ──
-document.getElementById('btnNext').addEventListener('click', async () => {
+// ── Navigation buttons ── (touchend + click guard to prevent double fire on mobile)
+let navLock = false;
+function handleNext(e) {
+    e.preventDefault();
+    if (navLock) return;
+    navLock = true;
+    setTimeout(() => navLock = false, 600);
+
     if (currentStep < 3) {
         if (!validateStep(currentStep)) return;
         goTo(currentStep + 1);
     } else {
-        await submitOrder();
+        submitOrder();
     }
-});
+}
+
+document.getElementById('btnNext').addEventListener('touchend', handleNext, { passive: false });
+document.getElementById('btnNext').addEventListener('click', handleNext);
 
 document.getElementById('btnBack').addEventListener('click', () => {
     if (currentStep > 0) goTo(currentStep - 1);
@@ -1172,7 +1180,6 @@ async function submitOrder() {
         produitRef:   'ELARAIN JEWELRY',
         prix:         document.getElementById('prix').value.trim(),
         qte:          document.getElementById('qte').value,
-        codeEnvoi,
         change:       document.getElementById('change').checked ? 1 : 0,
         ouvrirColis:  document.getElementById('ouvrirColis').checked ? 1 : 0,
         note:         document.getElementById('note').value.trim(),
