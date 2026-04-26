@@ -505,13 +505,54 @@
         /* ── Responsive ── */
         @media (max-width: 960px) {
             .sidebar { display: none; }
-            .main { margin-left: 0; padding: 24px 20px; }
+            .main { margin-left: 0; padding: 20px 16px 100px; }
             .form-layout { grid-template-columns: 1fr; }
+            .right-panel { display: none; }
+            .mobile-bar { display: flex !important; }
         }
 
         @media (max-width: 540px) {
+            :root { --input-h: 52px; }
+            .main { padding: 16px 12px 100px; }
             .row { grid-template-columns: 1fr; }
-            .options-row { flex-direction: column; }
+            .options-row { flex-direction: row; }
+            .section { padding: 20px 16px; }
+            .page-title { font-size: 1.4rem; }
+            .page-sub { margin-bottom: 20px; }
+        }
+
+        /* ── Mobile sticky bottom bar ── */
+        .mobile-bar {
+            display: none;
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            padding: 12px 16px;
+            z-index: 200;
+            gap: 12px;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .mobile-bar .price-pill {
+            background: rgba(99,102,241,0.15);
+            border: 1px solid rgba(99,102,241,0.25);
+            border-radius: 10px;
+            padding: 8px 14px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #a5b4fc;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .mobile-bar .price-pill span {
+            display: block;
+            font-size: 0.65rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 1px;
         }
     </style>
 </head>
@@ -654,7 +695,7 @@
         </div>
 
         <!-- Right: summary panel -->
-        <div>
+        <div class="right-panel">
             <div class="panel-card">
                 <div class="panel-head">Récapitulatif</div>
                 <div class="panel-body">
@@ -736,6 +777,7 @@ nameInput.addEventListener('input', () => {
 prixInput.addEventListener('input', () => {
     const v = prixInput.value.trim();
     document.getElementById('sPrix').textContent = v ? v + ' DH' : '—';
+    document.getElementById('mobilePrix').textContent = v ? v + ' DH' : '— DH';
 });
 
 // — City modal
@@ -863,5 +905,16 @@ form.addEventListener('submit', function(e) {
         });
 });
 </script>
+<!-- Mobile sticky submit bar -->
+<div class="mobile-bar" id="mobileBar">
+    <div class="price-pill">
+        <span>Prix</span>
+        <span id="mobilePrix">— DH</span>
+    </div>
+    <button type="submit" form="orderForm" class="btn-submit" style="flex:1;height:48px;font-size:0.9rem;" id="mobileSubmitBtn">
+        <i data-lucide="send" style="width:16px;height:16px;"></i>
+        Enregistrer
+    </button>
+</div>
 </body>
 </html>
