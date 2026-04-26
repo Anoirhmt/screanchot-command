@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nouveau Colis — Elarain</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --bg: #0f0f13;
+            --surface: #18181f;
+            --surface-2: #22222d;
+            --surface-3: #2e2e3d;
+            --border: rgba(255,255,255,0.08);
+            --border-focus: rgba(99,102,241,0.7);
+            --text: #f0f0f2;
+            --text-muted: #7c7c92;
+            --success: #10b981;
+            --error: #f87171;
+            --radius: 16px;
+            --input-h: 56px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* ── Sidebar ── */
+        .sidebar {
+            width: 240px;
+            min-height: 100vh;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 28px 16px;
+            position: fixed;
+            top: 0; left: 0; bottom: 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 36px;
+            padding: 0 8px;
+        }
+
+        .logo-icon {
+            width: 38px; height: 38px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .logo span { font-size: 1rem; font-weight: 700; }
+
+        .nav-section {
+            font-size: 0.6rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            padding: 0 10px;
+            margin-bottom: 6px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            transition: all 0.15s;
+            margin-bottom: 2px;
+        }
+
+        .nav-item.active { background: rgba(99,102,241,0.15); color: #a5b4fc; }
+        .nav-item:hover:not(.active) { background: var(--surface-2); color: var(--text); }
+
+        .sidebar-footer {
+            margin-top: auto;
+            padding: 14px;
+            border-radius: 10px;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .sidebar-footer strong { color: var(--text); display: block; margin-bottom: 2px; font-size: 0.85rem; }
+
+        /* ── Main ── */
+        .main {
+            margin-left: 240px;
+            flex: 1;
+            padding: 40px 48px;
+        }
+
+        .page-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 6px;
+        }
+
+        .page-sub {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 36px;
+        }
+
+        /* ── Two-column form layout ── */
+        .form-layout {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 28px;
+            align-items: start;
+        }
+
+        /* ── Section card ── */
+        .section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 28px 24px;
+            margin-bottom: 20px;
+        }
+
+        .section:last-child { margin-bottom: 0; }
+
+        .section-title {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* ── Field ── */
+        .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .field { margin-bottom: 16px; }
+        .field:last-child { margin-bottom: 0; }
+
+        label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .inp-wrap { position: relative; }
+
+        .inp-wrap svg.ico {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px; height: 18px;
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        input, textarea {
+            width: 100%;
+            height: var(--input-h);
+            background: var(--surface-2);
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            padding: 0 16px 0 50px;
+            outline: none;
+            transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+            -webkit-appearance: none;
+        }
+
+        input::placeholder, textarea::placeholder { color: #3d3d52; }
+
+        input:focus, textarea:focus {
+            border-color: var(--border-focus);
+            background: var(--surface-3);
+            box-shadow: 0 0 0 4px rgba(99,102,241,0.1);
+        }
+
+        input[readonly] { cursor: pointer; }
+        input[readonly]:hover { border-color: rgba(99,102,241,0.4); }
+
+        textarea {
+            height: auto;
+            min-height: 100px;
+            padding: 16px;
+            resize: none;
+            line-height: 1.5;
+        }
+
+        /* ── Quantity ── */
+        .qty-row {
+            display: flex;
+            align-items: center;
+            height: var(--input-h);
+            background: var(--surface-2);
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+
+        .qty-row:focus-within { border-color: var(--border-focus); }
+
+        .qty-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.4rem;
+            width: 52px;
+            height: 100%;
+            cursor: pointer;
+            transition: color 0.15s, background 0.15s;
+            flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            user-select: none;
+        }
+
+        .qty-btn:hover { color: var(--text); background: var(--surface-3); }
+        .qty-btn:active { background: var(--border); }
+
+        #qte {
+            border: none; background: transparent;
+            text-align: center; padding: 0;
+            font-size: 1.1rem; font-weight: 700;
+            height: 100%; flex: 1;
+        }
+
+        #qte:focus { box-shadow: none; border: none; }
+
+        /* ── Toggle options ── */
+        .options-row { display: flex; gap: 12px; }
+
+        .toggle-card {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            background: var(--surface-2);
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .toggle-card:hover { border-color: rgba(99,102,241,0.4); background: var(--surface-3); }
+        .toggle-card:has(input:checked) {
+            border-color: rgba(99,102,241,0.6);
+            background: rgba(99,102,241,0.08);
+        }
+
+        .toggle-card input[type="checkbox"] {
+            width: 20px; height: 20px;
+            accent-color: var(--primary);
+            padding: 0; cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .toggle-card span {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        /* ── Right panel ── */
+        .panel-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+
+        .panel-card:last-child { margin-bottom: 0; }
+
+        .panel-head {
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .panel-body { padding: 20px; }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.875rem;
+            margin-bottom: 12px;
+            color: var(--text-muted);
+        }
+
+        .summary-row:last-child { margin-bottom: 0; }
+        .summary-row strong { color: var(--text); font-weight: 600; }
+
+        .code-box {
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            color: #a5b4fc;
+            background: var(--surface-2);
+            border: 1px dashed rgba(99,102,241,0.3);
+            border-radius: 10px;
+            padding: 14px;
+            text-align: center;
+        }
+
+        /* ── Submit button ── */
+        .btn-submit {
+            width: 100%;
+            height: 58px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.2s;
+            box-shadow: 0 4px 24px rgba(99,102,241,0.35);
+            letter-spacing: 0.3px;
+        }
+
+        .btn-submit:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(99,102,241,0.5);
+        }
+
+        .btn-submit:active:not(:disabled) { transform: translateY(0); }
+        .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        /* ── Message ── */
+        #message {
+            margin-top: 14px;
+            padding: 14px 16px;
+            border-radius: 10px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            display: none;
+            text-align: center;
+        }
+
+        #message.success {
+            display: block;
+            background: rgba(16,185,129,0.1);
+            color: #34d399;
+            border: 1px solid rgba(16,185,129,0.25);
+        }
+
+        #message.error {
+            display: block;
+            background: rgba(248,113,113,0.1);
+            color: #f87171;
+            border: 1px solid rgba(248,113,113,0.25);
+        }
+
+        /* ── City Modal ── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            backdrop-filter: blur(6px);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+            animation: fadeIn 0.15s ease;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(24px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .modal-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            width: 100%;
+            max-width: 460px;
+            max-height: 78vh;
+            display: flex;
+            flex-direction: column;
+            animation: slideUp 0.2s ease;
+        }
+
+        .modal-top {
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .modal-top h3 { font-size: 1rem; font-weight: 700; }
+
+        .modal-close {
+            width: 32px; height: 32px;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.15s;
+        }
+
+        .modal-close:hover { background: var(--surface-3); color: var(--text); }
+
+        .modal-search {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .modal-search input {
+            height: 46px;
+            font-size: 0.95rem;
+            border-radius: 10px;
+        }
+
+        .city-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+        }
+
+        .city-list::-webkit-scrollbar { width: 4px; }
+        .city-list::-webkit-scrollbar-thumb { background: var(--surface-3); border-radius: 4px; }
+
+        .city-item {
+            padding: 14px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text);
+            transition: background 0.15s;
+        }
+
+        .city-item:hover { background: var(--surface-2); }
+        .city-item.selected { background: rgba(99,102,241,0.12); color: #a5b4fc; }
+
+        .no-results {
+            padding: 40px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            display: none;
+        }
+
+        /* ── Spin animation ── */
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── Responsive ── */
+        @media (max-width: 960px) {
+            .sidebar { display: none; }
+            .main { margin-left: 0; padding: 24px 20px; }
+            .form-layout { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 540px) {
+            .row { grid-template-columns: 1fr; }
+            .options-row { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+<aside class="sidebar">
+    <div class="logo">
+        <div class="logo-icon">
+            <i data-lucide="package" style="width:19px;height:19px;color:white;"></i>
+        </div>
+        <span>Elarain Ship</span>
+    </div>
+
+    <div class="nav-section">Menu</div>
+    <div class="nav-item active">
+        <i data-lucide="plus-square" style="width:17px;height:17px;"></i>
+        Nouveau Colis
+    </div>
+    <div class="nav-item">
+        <i data-lucide="list" style="width:17px;height:17px;"></i>
+        Mes Commandes
+    </div>
+    <div class="nav-item">
+        <i data-lucide="map-pin" style="width:17px;height:17px;"></i>
+        Villes & Tarifs
+    </div>
+    <div class="nav-item">
+        <i data-lucide="bar-chart-2" style="width:17px;height:17px;"></i>
+        Statistiques
+    </div>
+
+    <div class="sidebar-footer">
+        <strong>Elarain Jewelry</strong>
+        Livraison partout au Maroc<br>
+        Paiement à la livraison
+    </div>
+</aside>
+
+<main class="main">
+    <div class="page-title">Nouveau Colis</div>
+    <div class="page-sub">Remplissez les champs ci-dessous pour enregistrer une commande</div>
+
+    <form id="orderForm">
+    <div class="form-layout">
+
+        <!-- Left: form fields -->
+        <div>
+            <!-- Client -->
+            <div class="section">
+                <div class="section-title">
+                    <i data-lucide="user" style="width:13px;height:13px;"></i>
+                    Informations Client
+                </div>
+
+                <div class="row">
+                    <div class="field">
+                        <label for="destinataire">Destinataire</label>
+                        <div class="inp-wrap">
+                            <i data-lucide="user" class="ico"></i>
+                            <input type="text" id="destinataire" name="destinataire" placeholder="Nom complet" required autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="telephone">Téléphone</label>
+                        <div class="inp-wrap">
+                            <i data-lucide="phone" class="ico"></i>
+                            <input type="tel" id="telephone" name="telephone" placeholder="06XXXXXXXX" required autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="ville">Ville</label>
+                    <div class="inp-wrap">
+                        <i data-lucide="map-pin" class="ico"></i>
+                        <input type="text" id="ville" name="ville" placeholder="Tapez pour choisir votre ville..." readonly required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="adresse">Adresse complète</label>
+                    <textarea id="adresse" name="adresse" placeholder="Rue, Quartier, N° d'appartement..." required></textarea>
+                </div>
+            </div>
+
+            <!-- Order -->
+            <div class="section">
+                <div class="section-title">
+                    <i data-lucide="package" style="width:13px;height:13px;"></i>
+                    Détails de la Commande
+                </div>
+
+                <div class="row">
+                    <div class="field">
+                        <label for="produitRef">Référence Produit</label>
+                        <div class="inp-wrap">
+                            <i data-lucide="tag" class="ico"></i>
+                            <input type="text" id="produitRef" name="produitRef" placeholder="Ex: PROD-123" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="prix">Prix (DH)</label>
+                        <div class="inp-wrap">
+                            <i data-lucide="banknote" class="ico"></i>
+                            <input type="number" id="prix" name="prix" placeholder="Ex: 199" min="0" autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>Quantité</label>
+                    <div class="qty-row">
+                        <button type="button" class="qty-btn" id="qtyMinus">−</button>
+                        <input type="number" id="qte" name="qte" value="1" min="1">
+                        <button type="button" class="qty-btn" id="qtyPlus">+</button>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>Options</label>
+                    <div class="options-row">
+                        <label class="toggle-card">
+                            <input type="checkbox" id="change" name="change">
+                            <i data-lucide="refresh-cw" style="width:17px;height:17px;color:var(--text-muted);flex-shrink:0;"></i>
+                            <span>Échange</span>
+                        </label>
+                        <label class="toggle-card">
+                            <input type="checkbox" id="ouvrirColis" name="ouvrirColis">
+                            <i data-lucide="package-open" style="width:17px;height:17px;color:var(--text-muted);flex-shrink:0;"></i>
+                            <span>Ouvrir Colis</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="note">Note / Remarque</label>
+                    <textarea id="note" name="note" placeholder="Instructions pour le livreur..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: summary panel -->
+        <div>
+            <div class="panel-card">
+                <div class="panel-head">Récapitulatif</div>
+                <div class="panel-body">
+                    <div class="summary-row">
+                        <span>Destinataire</span>
+                        <strong id="sName">—</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>Ville</span>
+                        <strong id="sVille">—</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>Prix</span>
+                        <strong id="sPrix" style="color:#a5b4fc;">—</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>Paiement</span>
+                        <strong>À la livraison</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-card">
+                <div class="panel-head">Code d'Envoi</div>
+                <div class="panel-body">
+                    <div class="code-box" id="codeDisplay">—</div>
+                    <input type="hidden" id="codeEnvoi" name="codeEnvoi">
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit" id="submitBtn">
+                <i data-lucide="send" style="width:18px;height:18px;"></i>
+                Enregistrer la commande
+            </button>
+
+            <div id="message"></div>
+        </div>
+
+    </div>
+    </form>
+</main>
+
+<!-- City Modal -->
+<div id="cityModal" class="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-top">
+            <h3>Choisir une ville</h3>
+            <div class="modal-close" id="closeModal">
+                <i data-lucide="x" style="width:15px;height:15px;"></i>
+            </div>
+        </div>
+        <div class="modal-search">
+            <div class="inp-wrap">
+                <i data-lucide="search" class="ico"></i>
+                <input type="text" id="citySearch" placeholder="Rechercher une ville..." autocomplete="off">
+            </div>
+        </div>
+        <div class="city-list" id="cityList"></div>
+        <div class="no-results" id="noResults">Aucune ville trouvée.</div>
+    </div>
+</div>
+
+<script>
+lucide.createIcons();
+
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbyYpWvjwPEZ6-ZeITg_Dwj5ZqXxEXMTVYeNvEj9RncQDT6EKnyGjsjXzPho3SIg5m0/exec';
+
+const cities = ["Aarbaoua","Aarjate","Aayoune charkia-oujda","Achraft","Adouz-beni mellal","Adrar-ag","Afourar","Afourar-beni mellal","Agadir","Agdz-our","Aghbalou nisrdane- errachidia","Aghbalou-khenifra","Aghmat","Agourai","Aguelmous-khenifra","Aguelmous-khn","Ahfir","Ahfir-berkane","Ain allah","Ain allah-fes","Ain aouda","Ain atig","Ain bida","Ain bni mather - or","Ain cheggag","Ain chkef","Ain dorij-ouazzane","Ain erreggada","Ain hamra","Ain harouda","Ain taoujdate","Ain taoujdate-meknes","Ain_taoujdate","Ait aatab-beni mellal","Ait aissa oubrahim-errachidia","Ait baha","Ait el farssi-errachidia","Ait iaza-ag","Ait ishaq-khenifra","Ait melloul-ag","Ait melloul-agadir","Ait ourir-kech","Ait youssef ou ali","Ajdir-houceima","Ajdir-houcima","Ajdir-taza","Aklim","Aknoul","Al aaroui-nd","Al kalia-ag","Al massira-ag","Alnif","Amezmiz","Amzouren","Amzouren-hocema","Amzouren-hociema","Anza-ag","Aoufous-errachidia","Aoulouz-ag","Aourir-ag","Arfoud-errachidia","Asfi","Asilah","Asni","Assa-sahara","Awrir-ag","Awrir-agadir","Azilal","Azla-tanger","Azmour","Azmour-el jadida","Azmour-jd","Azrou","Azrou-ag","Azrou-agadir","Bab berred","Bab berred-chefchaouen","Bab taza","Bab taza-chefchaouen","Baba taza","Bassatine lmenzah","Belaagid-kech","Belfaa-ag","Ben ahmed","Ben guerir","Ben guerir-kech","Ben guerir-kelaa sraghna","Ben taib nador","Benhmed","Beni ahmed","Beni ayat-beni mellal","Beni bouayach-hocema","Beni drar","Beni drar-oujda","Beni ensar nador","Beni enser","Beni mellal","Beni oukil","Beni rzine","Beni tajjite","Benslimane","Berkan","Berkane","Berkane-or","Berrchid","Bhalil","Bin el ouidane-errachidia","Biogra-agadir","Biougra-ag","Bir el jadid","Bir el jadid-el jadida","Bir el jadid-jd","Bir jdid","Bir mezoui","Blfaa-agadir","Bni anser","Bni yakhlef","Bouarfa","Bouarg","Bouchane","Boudnib-errachidia","Boufakran","Boufakrane","Boufkrane","Boufkrane-meknes","Bouhlou","Bouizakarne","Boujaad","Boujdour","Boujniba","Boujniba-khr","Bouknadel","Boulanouaare","Boulanouare","Boulmane","Boulmane dadas-errachidia","Boulmane-fes","Boumalen dadas","Boumia","Boured","Bouskoura","Bouznika","Cabo negro","Casa","Casablanca","Chefchaouen","Chichaoua","Chichaoua-kech","Chmaaiya","Chmaaiya-jd","Chouiter","Chrifia","Chtouka ait baha","Dakhla","Dar bouazza","Dar el gadari","Dar gueddari","Dar oulad zidouh","Dar si issa","Dardara","Daroua","Dchaira","Demnat","Dllalha","Douar tikni","Douar zemrane","Douiyat","Drarga-ag","Drarga-agadir","Driouch","Driouch nador","Edchira-agadir","El afak","El aouamra","El attaouia - kalaa sraghna","El bazzaza-beni mellal","El borj-khenifra","El haj kaddour","El hajeb","El hajeb-meknes","El haouziya","El houda-agadir","El jadida","El kalaa sraghna","El kebab-khenifra","El kelaa sraghna","El ksiba-bm","El mansouria","El menzel","El oualidia","El ouatia","El rahma","El youssoufia","Elbrouj","Elkhiyam-agadir","Er-rich-err","Er-rich-errachidia","Errachidia","Errahma ville","Essaouira","Fahs anjra","Faryata-beni mellal","Ferkhana-nador","Fes","Figuig","Fkih ben salah","Fnidaq","Foum anser-beni mellal","Foum zaouia-beni mellal","Foum zguid - bm","Gara","Ghafsai","Goulmima-errachidia","Guelmim","Guercif","Gueznnaia","Guisser - settat","Gzenaya-tanger","Had bouhssoussen-khenifra","Had bradia","Had kourt","Had mssila","Had oulad zbair","Had soualem","Harhoura","Hattane","Hattane - bm","Hay el farah-agadir","Hay el ouafae-agadir","Hed oulad frej","Hed soualem","Hoceima","Houara - ag","Houara-agadir","Ifran","Ighrem","Ighrem nougdal - beni mellal","Ikhorba-beni mellal","Iligh-agadir","Imentanout","Imentanout-kech","Imentanout-marrakeche","Immouzzer- kandar","Inzgane","Inzgane-ag","Issegane","Jamaat shaim","Jamaat shaim- jd","Jemaat amtel","Jemaat ashim","Jerada","Jerf lesfer","Jmaat oulad gnem","Jourf lmelh","Kahf nsour-khenifra","Karia ba mohamed","Kariat arekmane","Kelaat magouna","Kenitra","Kesba tadla-beni mellal","Khemis ait amira-ag","Khemis el madiq","Khemiss zmamra","Khemiss zmamra-jd","Khemissat","Khenichet","Khenifra","Khmiss riyouni","Khnichat","Khouribga","Klaat magouna","Ksar l kbir","Ksar lkbir","Ksar sghir","Laagerb","Laajana-beni mellal","Laayayta ouled gnaou-beni mellal","Laayoune","Laayoune-sahara","Lagfaf","Lahraouiyin-casa","Lahri-khenifra","Lakhyayeta","Lala mimouna","Lalla takerkoust","Larache","Larbaat laounat","Lbdouza","Lirak bouarkan-agadir","Lissasfa","Loudaya-kech","Lounasda","Machroua belkssiri","Madagh","Madiq","Markaz touilat","Marrakech","Marrakeche","Martil","Massa","Massa-agadir","Mazagan beach","Mediouna","Mejjat-merrakeche","Meknes","Mers el khir","Merzouga","Mhaya","Mhaya - meknes","Midar","Midelt-errachidia","Mirlaft-agadir","Mirleft-ag","Missour","Missour-fes","Mkansa","Mohammedia","Mouhamadia","Mouhammadia","Moul lbergi","Moulay abdellah -el jadida","Moulay abdellah -jd","Moulay abdellah-jd","Moulay bouazza-bm","Moulay brahim kech","Moulay brahim-kech","Moulay driss zerhoun","Moulay driss zerhoun-meknes","Moulay yaacoub","Mrirt","Mrirt-khenifra","Mrirt-khn","Mrss lkhir","Mssewer rassou-el jadida","Mzoudia","Nador","Naima","Nouaccer","Ouad zem","Ouad zem-bn","Ouadlaou","Ouadlaou-chefchaouen","Oualmes","Ouaouizaght-errachidia","Ouaouizeght","Ouaoumana-khenifra","Ouarzazate","Oud-zem bejaad","Oud-zem nbejaad","Oued amlil","Ouezzane","Oujda","Oujda-or","Oulad ali loued-beni mellal","Oulad berhil-ag","Oulad berhil-agadir","Oulad dahou-agadir","Oulad gnaou","Oulad hssoun-kech","Oulad mbarek - bm","Oulad omrane","Oulad si bouhya","Oulad taima-ag","Oulad teyb","Oulad teyb-fes","Oulad yaich-beni mellal","Oulad youssef-beni mellal","Oulad zidouh - bm","Ouled amlil-taza","Ouled ayad souk sebt-beni mellal","Ouled mbarek-beni mellal","Ouled yhya","Ouled zmam-beni mellal","Oulouz-agadir","Ourika","Ourika-kech","Ourika-marrakeche","Outat el haj","Outat el haj-fes","Ouzoud","Ouzoud-errachidia","Rabat","Ras el ain","Ras el ma","Ras lma","Ras lma- fes","Ras lma-fes","Ribat el kheir","Rissani","Rommani","Route fes - kech","Safi","Saidia","Sala jadida","Sale","Sbaa aayoun","Sebt ben sassi","Sebt el grdan-agadir","Sebt gzoula","Sebt gzoula-jd","Sebt lmaarif","Sefrou","Segangan nador","Segangan-nador","Selouane-nador","Selouane-nd","Selwan","Settat","Sid aabed","Sidi abdellah ghiat","Sidi abed - jd","Sidi aissa ben ali-beni mellal","Sidi allal bahraoui","Sidi allal tazi","Sidi benour","Sidi benour-el jadida","Sidi benour-jd","Sidi bibi","Sidi bibi-ag","Sidi bibi-agadir","Sidi bou othmane","Sidi bou othmane-kech","Sidi bouzid - el jadida","Sidi gaber","Sidi harazem","Sidi hejjaj","Sidi ifni-ag","Sidi ifni-agadir","Sidi jaber-beni mellal","Sidi kacem","Sidi l moukhtar","Sidi lmoukhtar-marrakeche","Sidi moussa kech","Sidi rahal","Sidi slimane","Sidi taybi","Sidi yahya lgharb","Sidi yahya zair","Sidi zouine","Siti souis-agadir","Skhirat","Skhour rhamna","Skoura-beni mella","Smara","Souihla","Souiria","Souiria-jd","Souk el ahad-agadir","Souk el hed des bradia-beni mellal","Souk khemis du sahel","Souk larbaa","Souk sebt oulad nemma","Stihat-chefchaouen","Tabsbaste -errachiadia","Tadart-ag","Tadart-agadir","Tafraout","Taghazout","Taghazout-ag","Taghazout-agadir","Tagzirt-beni mellal","Tahanaout","Tahanaout-kech","Tahanaout-marrakeche","Tahla","Tahla-taza","Takadirt-agadir","Taliouine","Tamallalt","Tamansort-kech","Tamaress","Tamaris","Tamegroute","Tameslouhte","Tamesna","Tamessna","Tamraght-agadir","Tamsia-agadir","Tan-tan","Tanant","Tanger","Tanougha-beni mellal","Taounat","Taounate","Taourirt","Tarast-agadir","Tarfaya","Targist","Tarmigt","Tarodant-ag","Taroudant","Tarrast","Tassout","Tata","Taza","Tazarine","Taznakht","Temara","Temsia","Tendrara-nador","Tenejdad-errachidia","Tetouan","Tifelf","Tifelt","Tighssaline","Tikiouine-ag","Tilila-agadir","Timatriouine-errachidia","Timhdite","Timoulilt-beni mellal","Tinghir","Tinghir-err","Tinghir-errachidia","Tinzouline","Tisla-agadir","Tit-melil/sbit","Tizi ouasli","Tiznit","Tlat lhanchan","Tnin chtouka","Tnin chtouka-jd","Tnin el gharbia","Tnin lghiyat","Toulatae bou gdra","Youssoufia","Zag","Zagora","Zaida","Zaio","Zaio-nd","Zaouiat cheikh - beni melal","Zaouyat sidi smail","Zaouyat sidi smail-el jadida","Zeghanghan-nador","Zoumi"].sort();
+
+// — Live summary update
+const nameInput = document.getElementById('destinataire');
+const villeInput = document.getElementById('ville');
+const prixInput  = document.getElementById('prix');
+
+nameInput.addEventListener('input', () => {
+    document.getElementById('sName').textContent = nameInput.value.trim() || '—';
+});
+
+prixInput.addEventListener('input', () => {
+    const v = prixInput.value.trim();
+    document.getElementById('sPrix').textContent = v ? v + ' DH' : '—';
+});
+
+// — City modal
+const modal      = document.getElementById('cityModal');
+const cityList   = document.getElementById('cityList');
+const citySearch = document.getElementById('citySearch');
+const noResults  = document.getElementById('noResults');
+
+function openModal() {
+    modal.classList.add('open');
+    citySearch.value = '';
+    renderCities(cities);
+    setTimeout(() => citySearch.focus(), 80);
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+    modal.classList.remove('open');
+    document.body.style.overflow = '';
+}
+
+function renderCities(list) {
+    cityList.innerHTML = '';
+    noResults.style.display = list.length === 0 ? 'block' : 'none';
+    const current = villeInput.value;
+    list.forEach(city => {
+        const el = document.createElement('div');
+        el.className = 'city-item' + (city === current ? ' selected' : '');
+        el.textContent = city;
+        el.addEventListener('click', () => {
+            villeInput.value = city;
+            document.getElementById('sVille').textContent = city;
+            closeModal();
+        });
+        cityList.appendChild(el);
+    });
+}
+
+citySearch.addEventListener('input', e => {
+    const q = e.target.value.toLowerCase();
+    renderCities(cities.filter(c => c.toLowerCase().includes(q)));
+});
+
+villeInput.addEventListener('click', openModal);
+document.getElementById('closeModal').addEventListener('click', closeModal);
+modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+
+// — Quantity
+document.getElementById('qtyMinus').addEventListener('click', () => {
+    const q = document.getElementById('qte');
+    if (parseInt(q.value) > 1) q.value = parseInt(q.value) - 1;
+});
+document.getElementById('qtyPlus').addEventListener('click', () => {
+    const q = document.getElementById('qte');
+    q.value = parseInt(q.value) + 1;
+});
+
+// — Generate code
+function generateCode() {
+    const c = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let code = 'EXP-';
+    for (let i = 0; i < 8; i++) code += c[Math.floor(Math.random() * c.length)];
+    document.getElementById('codeEnvoi').value = code;
+    document.getElementById('codeDisplay').textContent = code;
+}
+generateCode();
+
+// — Submit
+const form = document.getElementById('orderForm');
+const msgDiv = document.getElementById('message');
+const submitBtn = document.getElementById('submitBtn');
+
+form.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    if (!cities.includes(villeInput.value)) {
+        msgDiv.textContent = '✗ Veuillez sélectionner une ville valide.';
+        msgDiv.className = 'error';
+        villeInput.click();
+        return;
+    }
+
+    const data = {
+        destinataire: document.getElementById('destinataire').value,
+        telephone:    document.getElementById('telephone').value,
+        ville:        document.getElementById('ville').value,
+        adresse:      document.getElementById('adresse').value,
+        produitRef:   document.getElementById('produitRef').value,
+        prix:         document.getElementById('prix').value,
+        qte:          document.getElementById('qte').value,
+        codeEnvoi:    document.getElementById('codeEnvoi').value,
+        change:       document.getElementById('change').checked ? 1 : 0,
+        ouvrirColis:  document.getElementById('ouvrirColis').checked ? 1 : 0,
+        note:         document.getElementById('note').value,
+    };
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<svg style="width:18px;height:18px;animation:spin 1s linear infinite" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Envoi en cours...';
+
+    fetch(SHEET_URL, { method: 'POST', body: JSON.stringify(data) })
+        .then(r => r.json())
+        .then(res => {
+            if (res.status === 'ok') {
+                msgDiv.innerHTML = '✓ Commande enregistrée avec succès !';
+                msgDiv.className = 'success';
+                form.reset();
+                document.getElementById('sName').textContent = '—';
+                document.getElementById('sVille').textContent = '—';
+                document.getElementById('sPrix').textContent = '—';
+                generateCode();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                setTimeout(() => { msgDiv.style.display = 'none'; }, 5000);
+            } else {
+                throw new Error(res.message || 'Erreur serveur');
+            }
+        })
+        .catch(err => {
+            msgDiv.textContent = '✗ ' + err.message;
+            msgDiv.className = 'error';
+        })
+        .finally(() => {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i data-lucide="send" style="width:18px;height:18px;"></i> Enregistrer la commande';
+            lucide.createIcons();
+        });
+});
+</script>
+</body>
+</html>
