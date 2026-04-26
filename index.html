@@ -2,8 +2,16 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Nouveau Colis — Elarain</title>
+    <meta name="description" content="Enregistrer vos commandes Elarain Jewelry">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0f0f13">
+    <!-- iOS PWA -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Elarain Ship">
+    <link rel="apple-touch-icon" href="icon-192.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -760,6 +768,11 @@
 
 <script>
 lucide.createIcons();
+
+// Register service worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').catch(() => {});
+}
 
 const SHEET_URL = 'https://script.google.com/macros/s/AKfycbyYpWvjwPEZ6-ZeITg_Dwj5ZqXxEXMTVYeNvEj9RncQDT6EKnyGjsjXzPho3SIg5m0/exec';
 
