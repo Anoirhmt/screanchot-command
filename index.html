@@ -807,14 +807,7 @@ textarea {
                         <input type="number" id="prix" placeholder="Ex: 199" min="0" inputmode="numeric">
                     </div>
                 </div>
-                <div class="field">
-                    <label>Quantité</label>
-                    <div class="qty-ctrl">
-                        <button type="button" class="qty-btn" id="qtyM">−</button>
-                        <input type="number" id="qte" value="1" min="1">
-                        <button type="button" class="qty-btn" id="qtyP">+</button>
-                    </div>
-                </div>
+                <input type="hidden" id="qte" value="1">
             </div>
             <div class="field">
                 <label>Options supplémentaires</label>
@@ -953,14 +946,6 @@ setupTog('togChange', 'change');
 setupTog('togOuvrir', 'ouvrirColis');
 
 // ── Qty ──
-document.getElementById('qtyM').addEventListener('click', () => {
-    const el = document.getElementById('qte');
-    if (parseInt(el.value) > 1) el.value = parseInt(el.value) - 1;
-});
-document.getElementById('qtyP').addEventListener('click', () => {
-    const el = document.getElementById('qte');
-    el.value = parseInt(el.value) + 1;
-});
 
 // ── City modal ──
 const cityModal = document.getElementById('cityModal');
